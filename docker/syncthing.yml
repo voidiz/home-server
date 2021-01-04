@@ -1,0 +1,19 @@
+---
+version: "2.1"
+services:
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    hostname: home-server # optional
+    environment:
+      - PUID=1000 # check with `$ id <your_username>`
+      - PGID=1000 # -- " --
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/syncthing:/config
+      - ${STORAGE_PATH}:/storage
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
