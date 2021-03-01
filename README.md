@@ -1,16 +1,24 @@
 # rpi-server
-Simple home server using a Raspberry Pi 4 and an external HDD
+Basic scripts and configs for a docker-centered home server using a Raspberry Pi 4 and an external HDD.
 
 ## services
 - samba
 - syncthing
 - jellyfin
+- deluge
 
 ## setup
 1. `$ cp env.sh.example env.sh`
 2. fill in the environment variables in env.sh
 3. `# ./setup.sh`
 4. `# ./start.sh`
+
+## usage
+### web interfaces
+Some of the services have their own web uis, here are some default ports to access them:
+- syncthing `:8384`
+- jellyfin `:8096`
+- deluge `:8112`
 
 ## other
 ### configuring omx (hardware encoding/decoding on rpi 3/4)
