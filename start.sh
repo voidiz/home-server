@@ -2,6 +2,7 @@
 
 #
 # Run with `sudo ./start.sh`
+# or `sudo ./start.sh update` to also update all containers.
 #
 
 source env.sh
