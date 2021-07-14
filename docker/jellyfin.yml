@@ -20,7 +20,7 @@ services:
       - 1900:1900/udp # discover by DNLA and clients
     devices:
       - /dev/dri:/dev/dri # intel hw accel (vaapi)
-      - /dev/vcsm:/dev/vcsm # rpi openmax video decoding
+      - /dev/vcsm-cma:/dev/vcsm-cma # rpi openmax video decoding
       - /dev/vchiq:/dev/vchiq # rpi openmax video encoding
       - /dev/video10:/dev/video10 # rpi v4l2 video encoding
       - /dev/video11:/dev/video11 # rpi v412 video encoding
