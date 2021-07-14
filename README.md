@@ -25,3 +25,5 @@ Some of the services have their own web uis, here are some default ports to acce
 Besides changing the encoder/decoder in the Jellyfin GUI, the following line should be added to `/boot/config.txt`:
 - RPi4: `gpu_mem=320`
 - RPi3: `gpu_mem=256`
+
+If the system crashes, try using a lower value.
