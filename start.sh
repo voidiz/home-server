@@ -18,6 +18,15 @@ docker_cmd=("docker-compose")
 for config in docker/*.yml; do
     docker_cmd+=("-f $config")
 done
-docker_cmd+=("up -d")
 
+# Optionally down all and update
+if [[ $1 = "update" ]]; then
+    docker_cmd_down=("${docker_cmd[@]}" "down")
+    eval "${docker_cmd_down[@]}"
+    docker_cmd_down=("${docker_cmd[@]}" "pull")
+    eval "${docker_cmd_update[@]}"
+fi
+
+docker_cmd+=("up -d")
 eval "${docker_cmd[@]}"
+
