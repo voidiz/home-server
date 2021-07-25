@@ -4,12 +4,6 @@
 # Run with `sudo ./setup.sh`
 #
 
-source env.sh
-
-CONTAINERS=(
-    linuxserver/syncthing
-)
-
 function install_docker() {
     [ ! -x "$(command -v docker)" ] && {
         echo "Installing docker"

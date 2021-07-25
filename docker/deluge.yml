@@ -6,8 +6,8 @@ services:
     container_name: deluge
     network_mode: host
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PID}
+      - PGID=${GID}
       - TZ=Europe/London
       - UMASK_SET=022 #optional
       - DELUGE_LOGLEVEL=error #optional

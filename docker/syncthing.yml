@@ -6,8 +6,8 @@ services:
     container_name: syncthing
     hostname: home-server # optional
     environment:
-      - PUID=1000 # check with `$ id <your_username>`
-      - PGID=1000 # -- " --
+      - PUID=${PID}
+      - PGID=${GID}
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/syncthing:/config

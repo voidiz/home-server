@@ -6,15 +6,6 @@
 # Restart all containers: `sudo ./start.sh restart`
 #
 
-source env.sh
-
-# Print variables
-echo "USER_NAME: $(who am i | awk '{print $1}')"
-echo "CONFIG_PATH: $CONFIG_PATH"
-echo "STORAGE_PATH: $STORAGE_PATH"
-echo "SMB_USER_NAME: $SMB_USER_NAME"
-echo "SMB_PASSWORD: <hidden>"
-
 # Start all containers
 docker_cmd=("docker-compose")
 for config in docker/*.yml; do
