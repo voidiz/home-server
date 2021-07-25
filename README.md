@@ -8,8 +8,8 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 - deluge
 
 ## setup
-1. `$ cp env.sh.example env.sh`
-2. fill in the environment variables in env.sh
+1. `$ cp .env.example .env`
+2. fill in the environment variables in `.env`
 3. `# ./setup.sh`
 4. `# ./start.sh`
 
