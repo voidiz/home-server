@@ -19,6 +19,8 @@ Some of the services have their own web uis, here are some default ports to acce
 - syncthing `:8384`
 - jellyfin `:8096`
 - deluge `:8112`
+- jackett `:9117`
+- sonarr `:8989`
 
 ## other
 ### configuring omx (hardware encoding/decoding on rpi 3/4)

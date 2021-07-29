@@ -1,18 +1,22 @@
 ---
-version: "2.1"
+version: "3.9"
 services:
   deluge:
     image: ghcr.io/linuxserver/deluge
     container_name: deluge
-    network_mode: host
     environment:
       - PUID=${PID}
       - PGID=${GID}
-      - TZ=Europe/London
+      - TZ=Europe/Stockholm
       - UMASK_SET=022 #optional
       - DELUGE_LOGLEVEL=error #optional
     volumes:
       - ${CONFIG_PATH}/deluge:/config
       - ${STORAGE_PATH}/Downloads:/downloads
       - ${STORAGE_PATH}/Videos:/videos
+    ports:
+      - 8112:8112 # webui
+      - 58846:58846 # daemon
+      - 6881:6881 # bittorrent
+      - 6881:6881/udp # bittorrent
     restart: unless-stopped
