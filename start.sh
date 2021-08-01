@@ -18,7 +18,7 @@ if [[ $1 == "update" || $1 == "restart" ]]; then
     eval "${docker_cmd_down[@]}"
 
     if [[ $1 == "update" ]]; then
-        docker_cmd_down=("${docker_cmd[@]}" "pull")
+        docker_cmd_update=("${docker_cmd[@]}" "pull")
         eval "${docker_cmd_update[@]}"
     fi
 fi
