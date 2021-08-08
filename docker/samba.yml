@@ -1,5 +1,5 @@
 ---
-version: "3.9"
+version: "3.4"
 services:
   samba:
     image: dperson/samba
@@ -9,12 +9,12 @@ services:
       TZ: Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/samba:/config
-      - ${STORAGE_PATH}:/storage
+      - ${STORAGE_PATH}:/storage:z
     ports:
       - "137:137/udp"
       - "138:138/udp"
       - "139:139/tcp"
       - "445:445/tcp" 
     restart: unless-stopped
-    command: " -s \"Storage;/storage;yes;no;no;${SMB_USER_NAME}\" -u \"${SMB_USER_NAME};${SMB_PASSWORD}\" -p"
+    command: '-s "Storage;/storage;yes;no;no;${SMB_USER_NAME}" -u "${SMB_USER_NAME};${SMB_PASSWORD}" -p'
 
