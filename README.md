@@ -6,6 +6,8 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 - syncthing
 - jellyfin
 - deluge
+- sonarr
+- jackett
 
 ## setup
 1. `$ cp .env.example .env`

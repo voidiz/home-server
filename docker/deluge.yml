@@ -9,7 +9,6 @@ services:
       - PGID=${GID}
       - TZ=Europe/Stockholm
       - UMASK_SET=022 #optional
-      - DELUGE_LOGLEVEL=error #optional
     volumes:
       - ${CONFIG_PATH}/deluge:/config
       - ${STORAGE_PATH}/Downloads:/downloads
