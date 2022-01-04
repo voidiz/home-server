@@ -1,0 +1,16 @@
+---
+version: "3.9"
+services:
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/radarr:/config
+      - ${STORAGE_PATH}:/storage
+    ports:
+      - 7878:7878
+    restart: unless-stopped

@@ -8,6 +8,8 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 - deluge
 - sonarr
 - jackett
+- radarr
+- bazarr
 
 ## setup
 1. `$ cp .env.example .env`
@@ -23,6 +25,8 @@ Some of the services have their own web uis, here are some default ports to acce
 - deluge `:8112`
 - jackett `:9117`
 - sonarr `:8989`
+- radarr `:7878`
+- bazarr `:6767`
 
 ## other
 ### configuring omx (hardware encoding/decoding on rpi 3/4)

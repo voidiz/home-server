@@ -1,0 +1,16 @@
+---
+version: "3.9"
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/bazarr:/config
+      - ${STORAGE_PATH}:/storage
+    ports:
+      - 6767:6767
+    restart: unless-stopped
