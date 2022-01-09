@@ -10,6 +10,7 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 - jackett
 - radarr
 - bazarr
+- gluetun
 
 ## setup
 1. `$ cp .env.example .env`
@@ -35,3 +36,6 @@ Besides changing the encoder/decoder in the Jellyfin GUI, the following line sho
 - RPi3: `gpu_mem=256`
 
 If the system crashes, try using a lower value.
+
+### todo
+- look at https://github.com/nginx-proxy/nginx-proxy for mDNS

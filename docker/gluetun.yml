@@ -1,0 +1,22 @@
+---
+version: "3.9"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      # Deluge
+      - 8112:8112 # webui
+      - 58846:58846 # daemon
+      - 6881:6881 # bittorrent
+      - 6881:6881/udp # bittorrent
+    environment:
+      - PUID=${PID}
+      - GUID=${GID}
+      - VPNSP=${VPN_PROVIDER}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
+      - CITY=${VPN_CITY}

@@ -3,6 +3,7 @@ version: "3.4"
 services:
   samba:
     image: dperson/samba
+    container_name: samba
     environment:
       USERID: ${PID}
       GROUPID: ${GID}

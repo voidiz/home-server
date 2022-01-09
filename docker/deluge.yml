@@ -13,9 +13,10 @@ services:
       - ${CONFIG_PATH}/deluge:/config
       - ${STORAGE_PATH}/Downloads:/downloads
       - ${STORAGE_PATH}/Videos:/videos
-    ports:
-      - 8112:8112 # webui
-      - 58846:58846 # daemon
-      - 6881:6881 # bittorrent
-      - 6881:6881/udp # bittorrent
+    # ports:
+      # - 8112:8112 # webui
+      # - 58846:58846 # daemon
+      # - 6881:6881 # bittorrent
+      # - 6881:6881/udp # bittorrent
+    network_mode: container:gluetun
     restart: unless-stopped
