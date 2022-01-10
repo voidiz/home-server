@@ -7,6 +7,18 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
+      # Bazarr
+      - 6767:6767
+
+      # Jackett
+      - 9117:9117
+
+      # Radarr
+      - 7878:7878
+
+      # Sonarr
+      - 8989:8989
+
       # Deluge
       - 8112:8112 # webui
       - 58846:58846 # daemon

@@ -11,6 +11,7 @@ services:
     volumes:
       - ${CONFIG_PATH}/radarr:/config
       - ${STORAGE_PATH}:/storage
-    ports:
-      - 7878:7878
+    # ports:
+      # - 7878:7878
+    network_mode: container:gluetun
     restart: unless-stopped

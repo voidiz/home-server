@@ -11,6 +11,7 @@ services:
     volumes:
       - ${CONFIG_PATH}/bazarr:/config
       - ${STORAGE_PATH}:/storage
-    ports:
-      - 6767:6767
+    # ports:
+      # - 6767:6767
+    network_mode: container:gluetun
     restart: unless-stopped

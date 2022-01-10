@@ -13,6 +13,7 @@ services:
     volumes:
       - ${CONFIG_PATH}/jackett:/config
       - ${STORAGE_PATH}/Downloads:/downloads
-    ports:
-      - 9117:9117
+    # ports:
+      # - 9117:9117
+    network_mode: container:gluetun
     restart: unless-stopped
