@@ -15,8 +15,8 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 ## setup
 1. `$ cp .env.example .env`
 2. fill in the environment variables in `.env`
-3. `# ./setup.sh`
-4. `# ./start.sh`
+3. `# ./setup.sh` to install docker
+4. `# docker-compose up -d`
 
 ## usage
 ### web interfaces

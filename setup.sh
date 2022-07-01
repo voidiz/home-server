@@ -23,3 +23,5 @@ function install_docker() {
 }
 
 install_docker
+systemctl enable docker --now
+

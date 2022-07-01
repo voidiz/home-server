@@ -1,0 +1,178 @@
+---
+version: "3.9"
+services:
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/bazarr:/config
+      - ${STORAGE_PATH}:/storage
+    # ports:
+      # - 6767:6767
+    network_mode: service:gluetun
+    restart: unless-stopped
+
+  jackett:
+    image: ghcr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+      - AUTO_UPDATE=true #optional
+      # - RUN_OPTS=<run options here> #optional
+    volumes:
+      - ${CONFIG_PATH}/jackett:/config
+      - ${STORAGE_PATH}/Downloads:/downloads
+    # ports:
+      # - 9117:9117
+    network_mode: service:gluetun
+    restart: unless-stopped
+
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/sonarr:/config
+      - ${STORAGE_PATH}:/storage
+    # ports:
+      # - 8989:8989
+    network_mode: service:gluetun
+    restart: unless-stopped
+
+  radarr:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/radarr:/config
+      - ${STORAGE_PATH}:/storage
+    # ports:
+      # - 7878:7878
+    network_mode: service:gluetun
+    restart: unless-stopped
+
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: ${PID}:${GID}
+    group_add:
+      - 44 # video group so that we have access to hw accel
+    environment:
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/jellyfin:/config
+      - ${STORAGE_PATH}:/storage
+      - /opt/vc/lib:/opt/vc/lib # rpi openmax lib path
+    ports:
+      - 8096:8096 # http webui
+      - 8920:8920 # https webui (need to setup ssl)
+      - 7359:7359/udp # allow clients to discover jellyfin
+      - 1900:1900/udp # discover by DNLA and clients
+    devices:
+      - /dev/dri:/dev/dri # intel hw accel (vaapi)
+      - /dev/vcsm-cma:/dev/vcsm-cma # rpi openmax video decoding
+      - /dev/vchiq:/dev/vchiq # rpi openmax video encoding
+      - /dev/video10:/dev/video10 # rpi v4l2 video encoding
+      - /dev/video11:/dev/video11 # rpi v412 video encoding
+      - /dev/video12:/dev/video12 # rpi v4l2 video encoding
+      # note that nvidia hwaccel requires more setup
+    restart: unless-stopped
+
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    hostname: home-server # optional
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/syncthing:/config
+      - ${STORAGE_PATH}:/storage
+    ports:
+      - 8384:8384
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
+
+  deluge:
+    image: ghcr.io/linuxserver/deluge
+    container_name: deluge
+    environment:
+      - PUID=${PID}
+      - PGID=${GID}
+      - TZ=Europe/Stockholm
+      - UMASK_SET=022 #optional
+    volumes:
+      - ${CONFIG_PATH}/deluge:/config
+      - ${STORAGE_PATH}/Downloads:/downloads
+      - ${STORAGE_PATH}/Videos:/videos
+    # ports:
+      # - 8112:8112 # webui
+      # - 58846:58846 # daemon
+      # - 6881:6881 # bittorrent
+      # - 6881:6881/udp # bittorrent
+    network_mode: service:gluetun
+    restart: unless-stopped
+
+  samba:
+    image: dperson/samba
+    container_name: samba
+    environment:
+      USERID: ${PID}
+      GROUPID: ${GID}
+      TZ: Europe/Stockholm
+    volumes:
+      - ${CONFIG_PATH}/samba:/config
+      - ${STORAGE_PATH}:/storage:z
+    ports:
+      - "137:137/udp"
+      - "138:138/udp"
+      - "139:139/tcp"
+      - "445:445/tcp" 
+    restart: unless-stopped
+    command: '-s "Storage;/storage;yes;no;no;${SMB_USER_NAME}" -u "${SMB_USER_NAME};${SMB_PASSWORD}" -p'
+
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      # Bazarr
+      - 6767:6767
+
+      # Jackett
+      - 9117:9117
+
+      # Radarr
+      - 7878:7878
+
+      # Sonarr
+      - 8989:8989
+
+      # Deluge
+      - 8112:8112 # webui
+      - 58846:58846 # daemon
+      - 6881:6881 # bittorrent
+      - 6881:6881/udp # bittorrent
+    environment:
+      - PUID=${PID}
+      - GUID=${GID}
+      - VPNSP=${VPN_PROVIDER}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
+      - CITY=${VPN_CITY}
