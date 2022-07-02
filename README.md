@@ -29,6 +29,8 @@ Some of the services have their own web uis, here are some default ports to acce
 - radarr `:7878`
 - bazarr `:6767`
 
+They can also be accessed through hostnames broadcasted over mDNS. This is done by adding `.local` to the service name. E.g., `jellyfin.local` for the jellyfin web ui. The hostnames can be changed by changing the values in `docker-compose.yml` and `services/mdns-publisher.sh`.
+
 ## other
 ### configuring omx (hardware encoding/decoding on rpi 3/4)
 Besides changing the encoder/decoder in the Jellyfin GUI, the following line should be added to `/boot/config.txt`:
@@ -37,5 +39,7 @@ Besides changing the encoder/decoder in the Jellyfin GUI, the following line sho
 
 If the system crashes, try using a lower value.
 
-### todo
-- look at https://github.com/nginx-proxy/nginx-proxy for mDNS
+### resources
+- mDNS
+    - https://andrewdupont.net/2022/01/27/using-mdns-aliases-within-your-home-network/
+

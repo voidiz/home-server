@@ -1,0 +1,9 @@
+[Unit]
+Description=Avahi CNAME/mDNS publisher
+
+[Service]
+ExecStart=mdns-publisher.sh
+# ExecStart=mdns-publish-cname jellyfin-raspberrypi.local
+
+[Install]
+WantedBy=multi-user.target

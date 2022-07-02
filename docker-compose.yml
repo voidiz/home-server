@@ -1,6 +1,61 @@
 ---
 version: "3.9"
 services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      # Bazarr
+      - 6767:6767
+
+      # Jackett
+      - 9117:9117
+
+      # Radarr
+      - 7878:7878
+
+      # Sonarr
+      - 8989:8989
+
+      # Deluge
+      - 8112:8112 # webui
+      - 58846:58846 # daemon
+      - 6881:6881 # bittorrent
+      - 6881:6881/udp # bittorrent
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=service:gluetun"
+
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.local`)"
+      - "traefik.http.routers.bazarr.service=bazarr-service"
+      - "traefik.http.services.bazarr-service.loadbalancer.server.port=6767"
+
+      - "traefik.http.routers.jackett.rule=Host(`jackett.local`)"
+      - "traefik.http.routers.jackett.service=jackett-service"
+      - "traefik.http.services.jackett-service.loadbalancer.server.port=9117"
+
+      - "traefik.http.routers.radarr.rule=Host(`radarr.local`)"
+      - "traefik.http.routers.radarr.service=radarr-service"
+      - "traefik.http.services.radarr-service.loadbalancer.server.port=7878"
+
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.local`)"
+      - "traefik.http.routers.sonarr.service=sonarr-service"
+      - "traefik.http.services.sonarr-service.loadbalancer.server.port=8989"
+
+      - "traefik.http.routers.deluge.rule=Host(`deluge.local`)"
+      - "traefik.http.routers.deluge.service=deluge-service"
+      - "traefik.http.services.deluge-service.loadbalancer.server.port=8112"
+    environment:
+      - PUID=${PID}
+      - GUID=${GID}
+      - VPNSP=${VPN_PROVIDER}
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
+      - CITY=${VPN_CITY}
+
   bazarr:
     image: ghcr.io/linuxserver/bazarr
     container_name: bazarr
@@ -88,6 +143,11 @@ services:
       - /dev/video11:/dev/video11 # rpi v412 video encoding
       - /dev/video12:/dev/video12 # rpi v4l2 video encoding
       # note that nvidia hwaccel requires more setup
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.local`)"
+      - "traefik.http.routers.jellyfin.service=jellyfin-service"
+      - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
     restart: unless-stopped
 
   syncthing:
@@ -105,6 +165,11 @@ services:
       - 8384:8384
       - 22000:22000
       - 21027:21027/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.local`)"
+      - "traefik.http.routers.syncthing.service=syncthing-service"
+      - "traefik.http.services.syncthing-service.loadbalancer.server.port=8384"
     restart: unless-stopped
 
   deluge:
@@ -114,7 +179,7 @@ services:
       - PUID=${PID}
       - PGID=${GID}
       - TZ=Europe/Stockholm
-      - UMASK_SET=022 #optional
+      - UMASK=022 #optional
     volumes:
       - ${CONFIG_PATH}/deluge:/config
       - ${STORAGE_PATH}/Downloads:/downloads
@@ -145,34 +210,15 @@ services:
     restart: unless-stopped
     command: '-s "Storage;/storage;yes;no;no;${SMB_USER_NAME}" -u "${SMB_USER_NAME};${SMB_PASSWORD}" -p'
 
-  gluetun:
-    image: qmcgaw/gluetun
-    container_name: gluetun
-    cap_add:
-      - NET_ADMIN
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    command:
+      - --api.insecure # webui
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false # don't expose containers by default
     ports:
-      # Bazarr
-      - 6767:6767
-
-      # Jackett
-      - 9117:9117
-
-      # Radarr
-      - 7878:7878
-
-      # Sonarr
-      - 8989:8989
-
-      # Deluge
-      - 8112:8112 # webui
-      - 58846:58846 # daemon
-      - 6881:6881 # bittorrent
-      - 6881:6881/udp # bittorrent
-    environment:
-      - PUID=${PID}
-      - GUID=${GID}
-      - VPNSP=${VPN_PROVIDER}
-      - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
-      - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
-      - CITY=${VPN_CITY}
+      - 80:80
+      - 8080:8080 # webui
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
