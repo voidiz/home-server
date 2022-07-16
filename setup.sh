@@ -40,5 +40,15 @@ function setup_mdns() {
     systemctl enable --now mdns-publisher.service
 }
 
+function setup_tailscale() {
+    [ ! -x "$(command -v tailscale)" ] && {
+        curl -fsSL https://tailscale.com/install.sh | sh
+    }
+
+    # Don't want to use pi-hole on the same machine as DNS server
+    tailscale up --accept-dns=false
+}
+
 setup_mdns
 install_docker
+setup_tailscale

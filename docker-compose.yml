@@ -28,23 +28,23 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=service:gluetun"
 
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.local`)"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.raspi`)"
       - "traefik.http.routers.bazarr.service=bazarr-service"
       - "traefik.http.services.bazarr-service.loadbalancer.server.port=6767"
 
-      - "traefik.http.routers.jackett.rule=Host(`jackett.local`)"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.raspi`)"
       - "traefik.http.routers.jackett.service=jackett-service"
       - "traefik.http.services.jackett-service.loadbalancer.server.port=9117"
 
-      - "traefik.http.routers.radarr.rule=Host(`radarr.local`)"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.raspi`)"
       - "traefik.http.routers.radarr.service=radarr-service"
       - "traefik.http.services.radarr-service.loadbalancer.server.port=7878"
 
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.local`)"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.raspi`)"
       - "traefik.http.routers.sonarr.service=sonarr-service"
       - "traefik.http.services.sonarr-service.loadbalancer.server.port=8989"
 
-      - "traefik.http.routers.deluge.rule=Host(`deluge.local`)"
+      - "traefik.http.routers.deluge.rule=Host(`deluge.raspi`)"
       - "traefik.http.routers.deluge.service=deluge-service"
       - "traefik.http.services.deluge-service.loadbalancer.server.port=8112"
     environment:
@@ -145,7 +145,7 @@ services:
       # note that nvidia hwaccel requires more setup
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.local`)"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.raspi`)"
       - "traefik.http.routers.jellyfin.service=jellyfin-service"
       - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
     restart: unless-stopped
@@ -167,7 +167,7 @@ services:
       - 21027:21027/udp
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.syncthing.rule=Host(`syncthing.local`)"
+      - "traefik.http.routers.syncthing.rule=Host(`syncthing.raspi`)"
       - "traefik.http.routers.syncthing.service=syncthing-service"
       - "traefik.http.services.syncthing-service.loadbalancer.server.port=8384"
     restart: unless-stopped
@@ -222,3 +222,29 @@ services:
       - 8080:8080 # webui
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.raspi`)"
+      - "traefik.http.routers.traefik.service=traefik-service"
+      - "traefik.http.services.traefik-service.loadbalancer.server.port=8080"
+    restart: unless-stopped
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "5089:80/tcp"
+    environment:
+      TZ: Europe/Stockholm
+      WEBPASSWORD: ${PIHOLE_PASSWORD}
+    volumes:
+      - ${CONFIG_PATH}/pihole:/etc/pihole
+      - ${CONFIG_PATH}/dnsmasq.d:/etc/dnsmasq.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.raspi`)"
+      - "traefik.http.routers.pihole.service=pihole-service"
+      - "traefik.http.services.pihole-service.loadbalancer.server.port=80"
+    restart: unless-stopped

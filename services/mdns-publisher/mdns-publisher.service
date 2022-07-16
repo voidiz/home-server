@@ -1,8 +1,0 @@
-[Unit]
-Description=Avahi CNAME/mDNS publisher
-
-[Service]
-ExecStart=mdns-publisher.sh
-
-[Install]
-WantedBy=multi-user.target

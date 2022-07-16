@@ -12,14 +12,29 @@ Basic scripts and configs for a docker-centered home server using a Raspberry Pi
 - bazarr
 - gluetun
 - traefik
+- pihole
 
 ## setup
 1. `$ cp .env.example .env`
-2. fill in the environment variables in `.env`
+2. Fill in the environment variables in `.env`
 3. `# ./setup.sh`
 4. `# docker-compose up -d`
 
+Then setup the various services through their [web uis](#web-interfaces).
+
+### Tailscale
+The setup script installs and starts [Tailscale](https://tailscale.com/) which can be used to access the server from anywhere. 
+
+Manual setup: add the Tailscale IP of the server as a DNS server to use Pi-hole as a DNS server (more info [here](https://tailscale.com/kb/1114/pi-hole/#optional-share-your-pi-hole-with-a-friend)).
+
+### Pi-hole
+Pi-hole can be used as a DNS server through Tailscale to access the web interfaces by a hostname instead of an IP and port combination.
+
+Manual setup: add DNS records pointing to the domains specified in `docker-compose.yml`.
+
 ## usage
+The server can be accessed through Tailscale.
+
 ### web interfaces
 Some of the services have their own web uis, here are some default ports to access them:
 - syncthing `:8384`
@@ -29,8 +44,10 @@ Some of the services have their own web uis, here are some default ports to acce
 - sonarr `:8989`
 - radarr `:7878`
 - bazarr `:6767`
+- pihole `:5089`
+- traefik `:8080`
 
-They can also be accessed through hostnames broadcasted over mDNS. This is done by adding `.local` to the service name. E.g., `jellyfin.local` for the jellyfin web ui. The hostnames can be changed by changing the values in `docker-compose.yml` and `services/mdns-publisher.sh`.
+They can also be accessed through hostnames resolved by Pi-hole. This is done by adding `.raspi` to the service name. E.g., `jellyfin.raspi` for the jellyfin web ui. The hostnames can be changed by changing the values in `docker-compose.yml` and the DNS records in pi-hole.
 
 ## other
 ### configuring omx (hardware encoding/decoding on rpi 3/4)
