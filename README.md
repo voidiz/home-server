@@ -60,4 +60,6 @@ If the system crashes, try using a lower value.
 ### resources
 - mDNS
     - https://andrewdupont.net/2022/01/27/using-mdns-aliases-within-your-home-network/
+- rpi reliability (reboot on crash, etc.)
+    - https://www.dzombak.com/blog/2023/12/Considerations-for-a-long-running-Raspberry-Pi.html
 
