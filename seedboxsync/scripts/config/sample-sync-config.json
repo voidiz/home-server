@@ -1,0 +1,9 @@
+{
+  "url": "sftp://example.com",
+  "username": "username",
+  "password": "password",
+  "dirs": [
+    { "source": "src1", "target": "dst1" },
+    { "source": "src2", "target": "dst2" }
+  ]
+}

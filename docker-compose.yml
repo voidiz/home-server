@@ -48,8 +48,8 @@ services:
       - "traefik.http.routers.deluge.service=deluge-service"
       - "traefik.http.services.deluge-service.loadbalancer.server.port=8112"
     environment:
-      - PUID=${PID}
-      - GUID=${GID}
+      - PUID=${PUID}
+      - GUID=${PGID}
       - VPNSP=${VPN_PROVIDER}
       - VPN_TYPE=wireguard
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
@@ -62,8 +62,8 @@ services:
     image: ghcr.io/linuxserver/bazarr
     container_name: bazarr
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/bazarr:/config
@@ -79,8 +79,8 @@ services:
     image: ghcr.io/linuxserver/jackett
     container_name: jackett
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
       - AUTO_UPDATE=true #optional
       # - RUN_OPTS=<run options here> #optional
@@ -98,8 +98,8 @@ services:
     image: ghcr.io/linuxserver/sonarr
     container_name: sonarr
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/sonarr:/config
@@ -115,8 +115,8 @@ services:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/radarr:/config
@@ -131,7 +131,7 @@ services:
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
-    user: ${PID}:${GID}
+    user: ${PUID}:${PGID}
     group_add:
       - 44 # video group so that we have access to hw accel
     environment:
@@ -157,8 +157,8 @@ services:
     container_name: syncthing
     hostname: home-server # optional
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/syncthing:/config
@@ -178,8 +178,8 @@ services:
     image: ghcr.io/linuxserver/deluge
     container_name: deluge
     environment:
-      - PUID=${PID}
-      - PGID=${GID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=Europe/Stockholm
       - UMASK=022 #optional
     volumes:
@@ -200,8 +200,8 @@ services:
     image: dperson/samba
     container_name: samba
     environment:
-      USERID: ${PID}
-      GROUPID: ${GID}
+      USERID: ${PUID}
+      GROUPID: ${PGID}
       TZ: Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/samba:/config
@@ -266,3 +266,16 @@ services:
       - /run/dbus:/run/dbus:ro
     privileged: true
     network_mode: host
+
+  seedboxsync:
+    container_name: seedboxsync
+    build: ./seedboxsync
+    restart: unless-stopped
+    command: /scripts/start-sync-seedbox.sh
+    environment:
+      - USER_ID=${PUID}
+      - GROUP_ID=${PGID}
+    volumes:
+      - ${STORAGE_PATH}:/storage
+      - ./seedboxsync/crontabs:/etc/crontabs:ro
+      - ./seedboxsync/scripts:/scripts:ro
