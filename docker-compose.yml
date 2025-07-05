@@ -55,6 +55,8 @@ services:
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
       - CITY=${VPN_CITY}
+    profiles:
+      - disabled
 
   bazarr:
     image: ghcr.io/linuxserver/bazarr
@@ -70,6 +72,8 @@ services:
       # - 6767:6767
     network_mode: service:gluetun
     restart: unless-stopped
+    profiles:
+      - disabled
 
   jackett:
     image: ghcr.io/linuxserver/jackett
@@ -87,6 +91,8 @@ services:
       # - 9117:9117
     network_mode: service:gluetun
     restart: unless-stopped
+    profiles:
+      - disabled
 
   sonarr:
     image: ghcr.io/linuxserver/sonarr
@@ -102,6 +108,8 @@ services:
       # - 8989:8989
     network_mode: service:gluetun
     restart: unless-stopped
+    profiles:
+      - disabled
 
   radarr:
     image: ghcr.io/linuxserver/radarr
@@ -117,6 +125,8 @@ services:
       # - 7878:7878
     network_mode: service:gluetun
     restart: unless-stopped
+    profiles:
+      - disabled
 
   jellyfin:
     image: jellyfin/jellyfin
@@ -135,14 +145,6 @@ services:
       - 8920:8920 # https webui (need to setup ssl)
       - 7359:7359/udp # allow clients to discover jellyfin
       - 1900:1900/udp # discover by DNLA and clients
-    devices:
-      - /dev/dri:/dev/dri # intel hw accel (vaapi)
-      - /dev/vcsm-cma:/dev/vcsm-cma # rpi openmax video decoding
-      - /dev/vchiq:/dev/vchiq # rpi openmax video encoding
-      - /dev/video10:/dev/video10 # rpi v4l2 video encoding
-      - /dev/video11:/dev/video11 # rpi v412 video encoding
-      - /dev/video12:/dev/video12 # rpi v4l2 video encoding
-      # note that nvidia hwaccel requires more setup
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.raspi`)"
@@ -191,6 +193,8 @@ services:
       # - 6881:6881/udp # bittorrent
     network_mode: service:gluetun
     restart: unless-stopped
+    profiles:
+      - disabled
 
   samba:
     image: dperson/samba
@@ -248,3 +252,17 @@ services:
       - "traefik.http.routers.pihole.service=pihole-service"
       - "traefik.http.services.pihole-service.loadbalancer.server.port=80"
     restart: unless-stopped
+    profiles:
+      - disabled
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+
+    # forwarding dbus and privileged is not ideal, but will do for now
+    volumes:
+      - ${CONFIG_PATH}/homeassistant:/config
+      - /run/dbus:/run/dbus:ro
+    privileged: true
+    network_mode: host
