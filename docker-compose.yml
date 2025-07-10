@@ -133,18 +133,19 @@ services:
     container_name: jellyfin
     user: ${PUID}:${PGID}
     group_add:
-      - 44 # video group so that we have access to hw accel
+      - 104 # video group so that we have access to hw accel
     environment:
       - TZ=Europe/Stockholm
     volumes:
       - ${CONFIG_PATH}/jellyfin:/config
       - ${STORAGE_PATH}:/storage
-      - /opt/vc/lib:/opt/vc/lib # rpi openmax lib path
     ports:
       - 8096:8096 # http webui
       - 8920:8920 # https webui (need to setup ssl)
       - 7359:7359/udp # allow clients to discover jellyfin
       - 1900:1900/udp # discover by DNLA and clients
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.raspi`)"
