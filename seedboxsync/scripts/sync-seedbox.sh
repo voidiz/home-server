@@ -18,7 +18,7 @@ echo "$config" | jq -c '.dirs[]' | while read -r item; do
 
     lftp "$url" \
         -u "$username,$password" \
-        -e "set sftp:auto-confirm yes; mirror -vvv --parallel --delete --continue --delete-first \"$src\" \"$tgt\"" \
+        -e "set sftp:auto-confirm yes; mirror -vvv --parallel --continue \"$src\" \"$tgt\"" \
         < /dev/null 2>&1
 done
 
