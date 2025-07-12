@@ -233,6 +233,8 @@ services:
       - "traefik.http.routers.traefik.service=traefik-service"
       - "traefik.http.services.traefik-service.loadbalancer.server.port=8080"
     restart: unless-stopped
+    profiles:
+      - disabled
 
   pihole:
     container_name: pihole
@@ -280,3 +282,19 @@ services:
       - ${STORAGE_PATH}:/storage
       - ./seedboxsync/crontabs:/etc/crontabs:ro
       - ./seedboxsync/scripts:/scripts:ro
+
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
+    restart: unless-stopped
+    ports:
+      - 8800:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    privileged: true
