@@ -310,7 +310,7 @@ services:
       driver: journald
 
   cadvisor:
-    container_name: cadvisor
+    container_name: cadvisor_media
     image: gcr.io/cadvisor/cadvisor:latest
     restart: unless-stopped
     ports:
