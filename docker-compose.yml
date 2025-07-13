@@ -55,6 +55,8 @@ services:
       - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESS=${WIREGUARD_ADDRESS}
       - CITY=${VPN_CITY}
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -72,6 +74,8 @@ services:
       # - 6767:6767
     network_mode: service:gluetun
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -91,6 +95,8 @@ services:
       # - 9117:9117
     network_mode: service:gluetun
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -108,6 +114,8 @@ services:
       # - 8989:8989
     network_mode: service:gluetun
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -125,6 +133,8 @@ services:
       # - 7878:7878
     network_mode: service:gluetun
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -152,6 +162,8 @@ services:
       - "traefik.http.routers.jellyfin.service=jellyfin-service"
       - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
     restart: unless-stopped
+    logging:
+      driver: journald
 
   syncthing:
     image: linuxserver/syncthing
@@ -174,6 +186,8 @@ services:
       - "traefik.http.routers.syncthing.service=syncthing-service"
       - "traefik.http.services.syncthing-service.loadbalancer.server.port=8384"
     restart: unless-stopped
+    logging:
+      driver: journald
 
   deluge:
     image: ghcr.io/linuxserver/deluge
@@ -194,6 +208,8 @@ services:
       # - 6881:6881/udp # bittorrent
     network_mode: service:gluetun
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -214,6 +230,8 @@ services:
       - "445:445/tcp" 
     restart: unless-stopped
     command: '-s "Storage;/storage;yes;no;no;${SMB_USER_NAME}" -u "${SMB_USER_NAME};${SMB_PASSWORD}" -p'
+    logging:
+      driver: journald
 
   traefik:
     image: traefik:latest
@@ -233,6 +251,8 @@ services:
       - "traefik.http.routers.traefik.service=traefik-service"
       - "traefik.http.services.traefik-service.loadbalancer.server.port=8080"
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -255,6 +275,8 @@ services:
       - "traefik.http.routers.pihole.service=pihole-service"
       - "traefik.http.services.pihole-service.loadbalancer.server.port=80"
     restart: unless-stopped
+    logging:
+      driver: journald
     profiles:
       - disabled
 
@@ -269,6 +291,8 @@ services:
       - /run/dbus:/run/dbus:ro
     privileged: true
     network_mode: host
+    logging:
+      driver: journald
 
   seedboxsync:
     container_name: seedboxsync
@@ -282,6 +306,8 @@ services:
       - ${STORAGE_PATH}:/storage
       - ./seedboxsync/crontabs:/etc/crontabs:ro
       - ./seedboxsync/scripts:/scripts:ro
+    logging:
+      driver: journald
 
   cadvisor:
     container_name: cadvisor
@@ -298,3 +324,5 @@ services:
     devices:
       - /dev/kmsg:/dev/kmsg
     privileged: true
+    logging:
+      driver: journald
